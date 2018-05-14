@@ -1,0 +1,98 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{Pesquisa Operacional - Relatório 07}
+\author{Adriel Cardoso dos Santos}
+\date{Maio 2018}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\begin{document}
+
+    \maketitle
+
+    \section{Descrição do problema}
+
+    Foi pedido a implementação de um modelo que solucionasse o problema de telecomunicações, onde eu preciso selecionar
+    um conjunto de antenas que atenda todos os requerimentos de banda dos consumidores e tenha custo mínimo.
+    Cada antena possui uma posição no espaço, um raio de alcance, uma banda máxima e um custo de instalação, cada consumidor
+    possui uma posição no espaço e uma quantidade de banda exigida.
+
+    \subsection{Valores}
+    Cada instância de consumidor e antena possui alguns valores que definirei a seguir:
+
+    \subsubsection{Antena}
+    \begin{enumerate}
+        \item $C_j$ = O custo da antena j
+        \item $L_j$ = O limite de banda da antena j
+    \end{enumerate}
+
+    \subsubsection{Consumidor}
+    \begin{enumerate}
+        \item $B_i$ = A quantidade banda exigida pelo usuário i
+    \end{enumerate}
+
+    \section{Modelo}
+
+    \subsection{Variáveis de decisão}
+
+    Para o meu modelo, defini as seguintes variáveis de decisão:
+
+    \begin{enumerate}
+        \item $X_j \in \{0, 1\} \quad \forall j = 1..k$ \quad sendo $k$ o número de antenas, essa variável define se uma antena está ligada ou
+        desligada na solução;
+        \item $U_i_j \in \mathbb{R} \quad \forall i = 1..n \quad \forall j = 1..k$ \quad sendo $n$ o número de clientes, e $k$ o número de antenas, essa variável define o uso de banda que cada cliente $i$ faz de cada antena $j$.
+    \end{enumerate}
+
+    \subsection{Restrições}
+    Tendo as variáveis de decisão, podemos definir as restrições.
+
+    \subsubsection{Uso}
+    Cada cliente precisa ter toda banda que ele exige, para isso a equação (1) define a restrição de uso.
+
+    \begin{equation}
+        \sum_{j = 1}^{k} U_i_j >= B_i \quad
+        \forall i=1..n
+    \end{equation}
+
+    \subsubsection{Apenas antenas ativas fornecem banda}
+    Apenas as antenas ativadas nas variáveis de decisão do modelo podem fornecer banda aos consumidores, a equação 2 define essa restrição. \linebreak
+    Seja $M$ uma constante muito grande.
+    \begin{equation}
+        \sum_{i = 1}^{n} U_i_j <= M Xj \quad
+        \forall j=1..k
+    \end{equation}
+
+    \subsubsection{Apenas antenas adjacentes fornecem banda}
+    Apenas as antenas adjacentes devem fornecer banda para o consumidor,
+    o calculo do da ajacência é feito fora do solver, dessa forma a equação (3) define
+    a restrição de uso, caso a antena não seja adjacente.
+
+    \begin{equation}
+        U_i_j = 0 \quad
+        \forall i=1..n \quad
+        \forall j=1..k
+    \end{equation}
+
+    \subsubsection{Limite de banda da antena}
+    Cada antena possui um limite, definido como $L_j$, o uso dos usuários não pode ultrapassar o limite de antena,
+    a equação (4) define essa restrição.
+
+    \begin{equation}
+        \sum_{i=1}^{n} U_i_j <= L_j \quad
+        \forall j=1..k
+    \end{equation}
+
+    \subsection{Função objetivo}
+    O objetivo desse modelo é reduzir o custo de instalação das antenas enquanto atendemos
+    todos os clientes, dessa forma, a equação (5) define a função que deve ser minimizada.
+
+    \begin{equation}
+        \sum_{j=1}^{k} Xj C_j
+    \end{equation}
+
+    \section{Conclusão}
+    A primeira instância fornecida não tinha uma solução, já a segunda foi possível solucionar utilizando modelo descrito acima.
+    A função objetivo foi minimizada até o valor $40,134$.
+
+
+\end{document}
