@@ -25,7 +25,7 @@ mdl.set_log_output(sys.stdout)
 X = [mdl.binary_var('A_' + str(i)) for i in range(0, len(antennas))]
 
 # Build the usage matrix
-usage = [[mdl.continuous_var(0, 999999, name='U_' + str(i) + '_' + str(j))
+usage = [[mdl.integer_var(0, 1, name='U_' + str(i) + '_' + str(j))
           for j in range(0, len(antennas))]
          for i in range(0, len(costumers))]
 
@@ -34,7 +34,7 @@ for i in range(0, len(usage)):
     expr = 0
     for j in range(0, len(usage[i])):
         expr += usage[i][j]
-    mdl.add(expr == costumers.loc[i]['d'])
+    mdl.add(expr >= 1)
 
 # Only activated antennas should have usage
 for j in range(0, len(usage[0])):
@@ -63,6 +63,7 @@ for i in range(0, len(X)):
     obj += X[i] * antennas.loc[i]['c']
 
 mdl.minimize(obj)
+
 
 try:
     slv = mdl.solve()
