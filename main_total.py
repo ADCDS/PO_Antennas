@@ -53,7 +53,7 @@ for i in range(0, len(usage)):
 for j in range(0, len(usage[0])):
     expr = 0
     for i in range(0, len(usage[j])):
-        expr += usage[i][j]
+        expr += usage[i][j] * costumers.loc[i]['d']
     mdl.add(expr <= antennas.loc[j]['l'])
 
 

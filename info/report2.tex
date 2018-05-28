@@ -1,0 +1,69 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{Pesquisa Operacional - Relatório 08}
+\author{Adriel Cardoso dos Santos}
+\date{Maio 2018}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[]{algorithm2e}
+\begin{document}
+
+    \maketitle
+
+    \section{Descrição do problema}
+
+    Foi pedido a comparação entre os dois modelos que solucionam diferentes problemas de distribuição de banda através de antenas.
+    A primeira definição permite que o solver utilize a banda de diversas antenas adjacentes ao cliente para o suprimento da banda, chamado de
+    modelo parcial,
+    a segunda definição define que apenas uma antena forneça toda a banda exigida pelo cliente, chamado de modelo total.
+    Como esses modelos ja foram definidos em relatórios e em aulas passadas, não definirei as restrições aqui novamente.
+
+    \section{Modelos}
+
+    Uma particularidade dos meus dois modelos é que o cálculo de adjacência não é feito dentro do solver.
+    Utilizo os seguintes passos para definir a restrição de adjacência nos dois modelos:
+
+    \begin{algorithm}[H]
+        \For{every client $i$}{
+        \For{every antenna $j$}{
+        \If{i is adjacent to j}{
+        $usage$[$i$][$j$] = 0;
+        }\EndIf
+        }\EndFor
+        }\EndFor
+    \end{algorithm}
+
+    Lembrando que $usage$ é e uma matriz de variáveis de decisão que relaciona clientes e antenas, e o valor armazenado dentro dela é a quantidade de banda que um cliente
+    $i$ está usando da antena $j$ no modelo parcial, no modelo total essa matriz é binária, e o valor dentro dela é $1$ se a antena $j$ atende o cliente $i$.
+    Como é possível ver, para cada cliente, eu itero por cada antena, e se os dois não forem adjacentes eu "forço" o modelo a utilizar 0 na relação.
+    Essa operação é custosa, pois além de eu realizar $N$*$M$ iterações (sendo $N$ o número de clientes e $M$ o número de antenas), o calculo de
+    adjacência é uma operação lenta, isso adiciona um atraso no meu programa.
+
+
+    \section{Resultados}
+    Vale lembrar que estou rodando um script em Python e faz as chamadas no solver CPLEX utilizando as libs em C.
+
+    \begin{enumerate}
+        \item Solve time é o tempo que o solver levou para resolver o problema.
+        \item Execution time é o tempo que o programa demorou para executar completamente.
+    \end{enumerate}
+
+    \begin{center}
+        \begin{tabular}{ | l | l | l | p{5cm} |}
+            \hline
+             & Modelo Parcial & Modelo Total \\ \hline
+            Ticks & 129.47 & 234.88 \\
+            Solve time & 0.31 sec & 0.67 sec \\
+            Execution time & 10.546 sec & 12.551 sec \\
+            \hline
+        \end{tabular}
+    \end{center}
+
+    \section{Conclusão}
+    Como é possível ver, o modelo parcial conseguiu resolver o problema mais rápidamente, acredito que o motivo seja porque ele trabalha
+    com as variáveis reais da matriz $usage$, enquanto que no modelo total, a matrix $usage$ é uma variável binária.
+    É possível ver que o programa levou mais tempo definindo as restrições do que resolvendo o modelo em sí.
+
+
+\end{document}
