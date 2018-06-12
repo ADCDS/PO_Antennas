@@ -1,3 +1,11 @@
+"""
+    Adriel Cardoso dos Santos
+    RA: 2015.1.08.001
+
+    Implementação do modelo que resolve o problema de telecomunicações utilizando banda parcial
+
+"""
+
 from builtins import len
 
 from docplex.mp.model import Model
@@ -67,7 +75,7 @@ mdl.minimize(obj)
 try:
     slv = mdl.solve()
 
-    # mdl.print_solution()
+    mdl.print_solution()
 
     # mdl.prettyprint()
 

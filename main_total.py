@@ -1,7 +1,15 @@
+"""
+    Adriel Cardoso dos Santos
+    RA: 2015.1.08.001
+
+    Implementação do modelo que resolve o problema de telecomunicações utilizando banda total
+
+"""
+
+
 from builtins import len
 
 from docplex.mp.model import Model
-from docplex.mp.utils import DOcplexException
 import numpy as np
 import sys
 
